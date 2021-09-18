@@ -10,6 +10,9 @@ start-local:
 stop-local:
 	docker-compose stop
 
+down-local:
+	docker-compose down -v --rmi all
+
 rm-local:
 	docker-compose rm -f
 
@@ -22,3 +25,7 @@ init-local:
 	$(MAKE) rm-local
 	$(MAKE) build
 	$(MAKE) start-local
+	$(MAKE) create-db
+
+create-db:
+	docker-compose run --rm php74-service php bin/console doctrine:database:create
