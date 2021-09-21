@@ -20,12 +20,15 @@ restart-local:
 	$(MAKE) stop-local
 	$(MAKE) start-local
 
+migrations-update:
+	docker-compose run --rm php74-service php bin/console doctrine:database:drop --force
+	docker-compose run --rm php74-service php bin/console doctrine:database:create
+	docker-compose run --rm php74-service php bin/console doctrine:migrations:migrate
+	docker-compose run --rm php74-service php bin/console doctrine:fixtures:load
+
 init-local:
 	$(MAKE) stop-local
 	$(MAKE) rm-local
 	$(MAKE) build
 	$(MAKE) start-local
-	$(MAKE) create-db
-
-create-db:
-	docker-compose run --rm php74-service php bin/console doctrine:database:create
+	$(MAKE) migrations-update
